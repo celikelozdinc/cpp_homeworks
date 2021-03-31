@@ -27,8 +27,29 @@ void garply(float){cout << "float";}
 void wobble(int){cout << "int";}
 void wobble(double){cout << "double";}
 
+void tata(int);  	//1
+void tata(double); 	//2
+void tata(long);  	//3
+void tata(bool); 	//4
+
+
+void display(char const *ptr){cout << ptr;} //1
+void display(unsigned int uval){cout << uval;} //2
+
+
 
 int main() {
+    /* fo_01.md => https://vimeo.com/433280009 */
+    int x__ = 10;
+
+	tata('A'); //=> 2 (Integral promotion)
+	tata(2.3F); //=> 2 (Promotion)
+	//tata(4u) //=> Ambiguity. Conversion will be applied on each of 4 functions
+	tata(10 > 5); //=> 4 (Exact match)
+	tata(&x__); //=> Conversion exist from int* to bool
+	//tata(nullptr);
+
+
     /* fo_02.md => https://vimeo.com/433281751 */
     double x = 1.0;
     //foo(0); //=> Conversion vs Conversion -> Ambiguity
@@ -61,6 +82,15 @@ int main() {
     fuga(_fuga1()); //=> return type : pr value expression => 1 is not viable. Chooses 2
     fuga(_fuga2()); //=> return type : lvalue expression => 2 is not viable. Chooses 1
     fuga(_fuga3()); //=> return type : lvalue expression => 2 is not viable. Chooses 3
+
+
+    /* fo_07.md => https://vimeo.com/433292846 */
+    display("abc"); //2 is not viable
+	//display(0); //=> Conversion vs Conversion. Ambiguity
+    display(0u); //=> 2 -> Exact match
+	display('A'); //=> 1 is not viable
+
+
 
 
     /* fo_09.md =>  https://vimeo.com/433296005*/
