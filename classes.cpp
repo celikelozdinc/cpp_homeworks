@@ -68,7 +68,97 @@ void F::func(F& rf)const
     F::my = 75; // can access static members
 }
 
+/* class_013.md => https://vimeo.com/435763539 */
+class Y {
+	int mx = 0; // default initializer
+	mutable int my = 10; // default initializer
+public:
+	void f(); // non-const member func
+	void cf()const; // const member func
 
+	Y* func() const //inline
+	{
+		// mx = 12; // const member func can not mutate non-const data member
+		my = 23; // declared as mutable
+		//f(); // const member func can not call non-const member func
+		cf();
+		// return this; // can not convert from const Y* to Y*
+	}
+};
+
+
+
+/* class_11.md =>  https://vimeo.com/435749866 */
+void func___(int);
+
+class Z {
+public:
+	void func___() //declared as inline 
+	{
+		//func___(1); // Found in class scope
+		//Z::func___(2); //Found in class scope
+		func___(); // Recursive call
+		::func___(3); // Operand of unary scope resolution operator -> Found in global scope
+		//::func___();
+	}
+};
+
+
+
+/* class_014.md => https://vimeo.com/435767306 */
+class D {
+public:
+	void func(); //non-const member func
+	void foo()
+	{
+		func(); //recursive
+		foo();
+		D::func(); // qualified name
+		this->func();
+		(*this).func();
+		this->D::func();
+	}
+};
+
+
+/* class_015.md => https://vimeo.com/435771459 */
+class E {
+	int x(int) 
+    { 
+        return 1; 
+    }
+public:
+	void foo();
+};
+
+int x = 20; //global variable
+
+void E::foo()
+{
+	if (auto x = ::x + 5; x  > 10) // if with initializer
+		x = this->x(x); // 1 <- 25 
+	
+	// ++x; // function name can not be operand of operator++
+	auto val = x(::x); //1
+	E::x(::x);
+}
+
+
+/* class_017.md => https://vimeo.com/435790761 */
+class G {
+	void f(int); //1     -> function overloading
+	void f(double); //2  -> function overloading
+
+public:
+	void f() //inline
+	{
+		f();  //recursive call
+		f(12); //1
+		f(1.2); //2
+		f(2.3f); //2 (promotion)
+		//f(4u); //ambiguity
+	}
+};
 
 int main() {
     /* class_02.md =>  https://vimeo.com/368262675 */
